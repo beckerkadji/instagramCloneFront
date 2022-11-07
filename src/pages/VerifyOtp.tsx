@@ -55,7 +55,7 @@ function VerifyOtp(){
                         value={localStorage.getItem('email') || ''}
                         {...register("email")} 
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
+                {errors.email && <p>{errors.email.message}</p>}
                     <input 
                         type='number'
                         {...register("otp")} 
