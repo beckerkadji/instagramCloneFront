@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { logoutUser } from "../authApi/api";
+import React, { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../lib/auth";
 import { storage } from "../utils"
 
@@ -18,7 +17,7 @@ function Home () {
     
     
     const logoutFn = async ()=>{
-        const res = await logoutUser(token)
+        const res = await logout(token)
         console.log(res)
         if (res.data.code == 5000){
             storage.clearData()

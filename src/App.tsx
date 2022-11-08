@@ -23,6 +23,7 @@ function App() {
               <Route path='/home' element={<Home />} />
               <Route path='/register' element={<Register />} />
               <Route path='/verify-otp' element={<VerifyOtp />} />
+              <Route path='/login' element={<Login />} />
               <Route path="*" element={<NotFound/>}/>
             </Routes>
           </BrowserRouter>

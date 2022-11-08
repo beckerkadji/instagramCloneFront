@@ -1,20 +1,35 @@
 import axios from 'axios'
 import LoginType from "../interfaces/Login.type"
+import RegisterType from '../interfaces/Register.type'
+import VerifyOptType from '../interfaces/VerifyOtp.type'
 import { storage } from '../utils'
 
 export const login = async (data: LoginType.loginFields)=>{
-    console.log("data is :",data)
     let res: any = await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/login`, data)
     console.log('Login', res )
     return res
 }
 
-export const loginVerifyOtp = async (data: LoginType.verifyOtp) =>{
+export const register = async (data: RegisterType.registerFields) => {
+    let res: any = await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/register`, data)
+    console.log('Register', res )
+    return res
+}
+
+export const loginVerifyOtp = async (data: VerifyOptType.verifyOtp) =>{
     return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/login/verifyotp`, data)
 }
 
-export const loginResendOtp = async (data: LoginType.loginResendOtp) =>{
+export const loginResendOtp = async (data: VerifyOptType.ResendOtp) =>{
     return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/login/resentotp`, data)
+}
+
+export const registerVerifyOpt = async (data: VerifyOptType.verifyOtp) =>{
+    return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/register/validateEmail`, data)
+}
+
+export const registerResendOtp = async (data: VerifyOptType.ResendOtp) =>{
+    return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/register/resentotp`, data)
 }
 
 export const logoutUser = async (token: string) => {

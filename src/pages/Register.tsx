@@ -6,6 +6,7 @@ import { useAuth } from "../lib/auth";
 import {BiHide, BiShow} from "react-icons/bi"
 import { registerSchema } from "../validations/register.validation";
 import RegisterType from "../interfaces/Register.type";
+import { useMutation } from "react-query";
 
 function Register(){
 
@@ -37,15 +38,16 @@ function Register(){
         formState:{ errors },
         handleSubmit
     } = useForm<RegisterType.registerFields>({ resolver: joiResolver(registerSchema)})
+    const { ref , ...rest} = register2("password")
     const navigate = useNavigate()
     const {register} = useAuth();
 
     const onRegister = async (data: any) =>{
         const res: any =  await register(data);
-        console.log("data", data)
+        
         if (res.data.code == 5000){
             localStorage.setItem('email', data.email)
-            navigate('/verify-otp')
+            navigate('/verify-otp', {state:{page:"register"}})
        }
     }
 
@@ -90,9 +92,9 @@ function Register(){
                         <div className="form-floating w-[78%] border-[1px] flex mt-2 relative justify-center">
                             <input 
                                 type='password' placeholder="password"
-                                {...register2("password")} 
+                                {...rest}
                                 onChange={CheckPassword}
-                                ref={inputPassword}
+                                ref={(e: any) =>{ref(e); inputPassword.current = e}}
                                 className="input rounded-sm form-control w-full bg-[#fafafa]" id="floatingPassword"
                             /> <label htmlFor="floatingPassword" className="label text-xs text-gray-700 border-2 focus:outline-none focus:shadow-none">password</label>
                             <span className={`absolute ${isPassword == false? "hidden":null} right-2 inset-y-1/2`}>{visible == false ? <button onClick={showPassword} className="cursor-pointer"><BiShow /></button> : 

@@ -11,7 +11,7 @@ function Login(){
     
     const [isPassword, setIsPassword] = useState(false)
     const [visible, setVisible] = useState(false)
-    const inputPassword= useRef() as MutableRefObject<HTMLInputElement>
+    const inputPassword = useRef() as MutableRefObject<HTMLInputElement>
 
     const CheckPassword = (e: any)=>{
         if(e.target.value === null || e.target.value === undefined || e.target.value === ''){
@@ -25,7 +25,7 @@ function Login(){
         e.preventDefault();
         if(inputPassword.current.type === "password"){
             setVisible(true); 
-            inputPassword.current.type ="text"
+            inputPassword.current.type = "text"
         }else{
             setVisible(false);
             inputPassword.current.type ="password"
@@ -37,15 +37,16 @@ function Login(){
         formState:{ errors },
         handleSubmit
     } = useForm<LoginType.loginFields>({ resolver: joiResolver(loginSchema)})
+    const { ref, ...rest} = register("password")
     const navigate = useNavigate()
     const {login} = useAuth();
 
     const onLogin = async (data: any)=>{
-       const res: any =  await login(data);
+       const res: any = await login(data);
        console.log('res', res.data)
        if (res.data.code == 5000){
             localStorage.setItem('email', data.email)
-            navigate('/verify-otp')
+            navigate('/verify-otp', {state:{page:"login"}})
        }
     }
 
@@ -71,9 +72,9 @@ function Login(){
                             <input 
                                 type='password'
                                 placeholder="password" id="floatingPassword"
-                                {...register("password")} 
+                                {...rest} 
                                 onChange={CheckPassword}
-                                ref={inputPassword}
+                                ref={(e: any) =>{ref(e); inputPassword.current = e}}
                                 className="input rounded-sm form-control w-full bg-[#fafafa]"
                             /> <label htmlFor="floatingPassword" className="label text-xs text-gray-700 border-2 focus:outline-none focus:shadow-none">password</label>
                             <span className={`absolute ${isPassword == false? "hidden":null} right-2 inset-y-1/2`}>{visible == false ? <button onClick={showPassword} className="cursor-pointer"><BiShow /></button> : 
@@ -83,9 +84,9 @@ function Login(){
                     <div className="flex justify-center mt-4 h-8">
                         <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Se connecter</button>
                     </div>
-                    <div className="text-red-500 translate-y-4 flex justify-center items-center">
-                        {errors.email && <span>{errors.email.message}</span>}
-                        {errors.password && <span>{errors.password.message}</span>}
+                    <div className="text-red-500 translate-y-4 text-[10px] flex flex-col justify-center items-center">
+                        {errors.email && <p>{errors.email.message}</p>}
+                        {errors.password && <p>{errors.password.message}</p>}
                     </div>
                     
                     <div className="w-full flex justify-center mt-12">

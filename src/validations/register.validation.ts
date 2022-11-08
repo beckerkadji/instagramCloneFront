@@ -8,8 +8,3 @@ export const registerSchema = Joi.object({
     tel: schema.tel,
     password : schema.password
 })
-
-export const verifyOtpSchema = Joi.object({
-    email : schema.email,
-    otp: schema.otp
-})
