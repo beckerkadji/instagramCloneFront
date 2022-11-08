@@ -6,7 +6,6 @@ import { useAuth } from "../lib/auth";
 import {BiHide, BiShow} from "react-icons/bi"
 import { registerSchema } from "../validations/register.validation";
 import RegisterType from "../interfaces/Register.type";
-import { useMutation } from "react-query";
 
 function Register(){
 
@@ -40,12 +39,12 @@ function Register(){
     } = useForm<RegisterType.registerFields>({ resolver: joiResolver(registerSchema)})
     const { ref , ...rest} = register2("password")
     const navigate = useNavigate()
-    const {register} = useAuth();
+    const {register, isRegistering} = useAuth();
 
     const onRegister = async (data: any) =>{
         const res: any =  await register(data);
         
-        if (res.data.code == 5000){
+        if (res.data.code === 5000){
             localStorage.setItem('email', data.email)
             navigate('/verify-otp', {state:{page:"register"}})
        }
@@ -102,7 +101,15 @@ function Register(){
                         </div>
                     </div>
                     <div className="flex justify-center mt-4 h-8">
-                        <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">S'Inscrire</button>
+                            { isRegistering ?
+                                <div className="bg-[#0095f6] w-[78%] opacity-60 flex justify-center items-center">
+                                    <button disabled className="text-white spinner-border animate-spin inline-block w-6 h-6 rounded-full">
+                                    <span className="visually-hidden">Loading...</span>
+                                    </button>
+                                </div> 
+                                :
+                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Se connecter</button> 
+                            }
                     </div>
                     <div className="text-red-500 translate-y-4 flex justify-center items-center">
                         {errors.email && <span>{errors.email.message}</span>}

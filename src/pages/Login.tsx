@@ -39,7 +39,7 @@ function Login(){
     } = useForm<LoginType.loginFields>({ resolver: joiResolver(loginSchema)})
     const { ref, ...rest} = register("password")
     const navigate = useNavigate()
-    const {login} = useAuth();
+    const {login, isLoggingIn} = useAuth();
 
     const onLogin = async (data: any)=>{
        const res: any = await login(data);
@@ -82,7 +82,15 @@ function Login(){
                         </div>
                     </div>
                     <div className="flex justify-center mt-4 h-8">
-                        <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Se connecter</button>
+                            { isLoggingIn ?
+                                <div className="bg-[#0095f6] w-[78%] opacity-60 flex justify-center items-center">
+                                    <button disabled className="text-white spinner-border animate-spin inline-block w-6 h-6 rounded-full">
+                                    <span className="visually-hidden">Loading...</span>
+                                    </button>
+                                </div> 
+                                :
+                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Se connecter</button> 
+                            }
                     </div>
                     <div className="text-red-500 translate-y-4 text-[10px] flex flex-col justify-center items-center">
                         {errors.email && <p>{errors.email.message}</p>}

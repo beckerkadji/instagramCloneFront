@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import VerifyOptType from "../interfaces/VerifyOtp.type";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { verifyOtpSchema } from "../validations/verifyOtp.validation";
 import { storage } from "../utils";
 import { loginResendOtp, loginVerifyOtp, registerResendOtp, registerVerifyOpt } from "../authApi/api";
+import { useMutation } from "react-query";
 
 
 function FormOtp (props: any){
@@ -17,7 +18,7 @@ function FormOtp (props: any){
     
     const navigate = useNavigate()
     useEffect(()=>{
-        if( localStorage.getItem('email') == null && localStorage.getItem('token') == null && (fromPage == undefined || fromPage == null || fromPage == "")){
+        if( localStorage.getItem('email') === null && localStorage.getItem('token') === null && (fromPage === undefined || fromPage === null || fromPage === "")){
             navigate('/')
           }
     }, [])
@@ -28,42 +29,64 @@ function FormOtp (props: any){
         formState: {errors}
     } = useForm<VerifyOptType.verifyOtp>({ resolver: joiResolver(verifyOtpSchema)})
 
-    const onLoginVerifyOtp = async (data : any) =>{
+
+
+
+    const {isLoading: isresentOtpRegister, mutateAsync: mutateAsyncRegisterResentOpt} = useMutation(async (data: any) =>{
+        const res =  await loginResendOtp({email})
+        setDesabled(true)
+        console.log(res)
+
+        return res
+    })
+    const registerResend =  async (data: any) =>{
+        await mutateAsyncRegisterResentOpt(data)
+    }
+
+    const {isLoading: isresentOtpLogin, mutateAsync: mutateAsyncLoginResentOpt} = useMutation(async (data: any) =>{
+        const res =  await loginResendOtp({email})
+        setDesabled(true)
+        console.log(res)
+
+        return res
+    })
+    const loginResend =  async (data: any) =>{
+        await mutateAsyncLoginResentOpt(data)    
+    }
+
+    const {isLoading: isloadingVerifyOtp, mutateAsync: mutateAsyncLoginVerify} = useMutation(async (data: any)=>{
         const res: any = await loginVerifyOtp(data)
         setEmail(data.email)
         setDesabled(false)
         console.log(res.data)
-        if (res.data.code == 5000){
+        if (res.data.code === 5000){
             const userdata = Object.entries(res.data.data)
             console.log(userdata)
             storage.setData(userdata)
             navigate('/home')
         }
+        return res
+    })
+    const onLoginVerifyOtp = async (data : any) =>{
+        await mutateAsyncLoginVerify(data)
     }
 
-    const loginResend =  async () =>{
-        const res =  await loginResendOtp({email})
-        setDesabled(true)
-        console.log(res)
-    }
-
-    const registerResend =  async () =>{
-        const res =  await registerResendOtp({email})
-        setDesabled(true)
-        console.log(res)
-    }
-
-    const onRegisterVerifyOtp = async (data: any) =>{
+    const { isLoading: isLoadingRegisterVerifyOtp, mutateAsync: mutateAsyncRegisterVerifyOtp} = useMutation(async (data:any) => {
         const res: any = await registerVerifyOpt(data)
         setEmail(data.email)
         setDesabled(false)
         console.log(res.data.code)
-        if (res.data.code == 5000){
+        if (res.data.code === 5000){
             const userdata = Object.entries(res.data.data)
             console.log(userdata)
             storage.setData(userdata)
             navigate('/')
         }
+
+        return res
+    })
+    const onRegisterVerifyOtp = async (data: any) =>{
+        await mutateAsyncRegisterVerifyOtp(data)
     }
 
     return(
@@ -99,16 +122,29 @@ function FormOtp (props: any){
                             /> <label htmlFor="floatingOtp" className="label text-xs text-gray-700 border-2">Otp</label>
                         </div>
                     </div>
-                    
                     <div className="flex justify-center mt-4 h-8">
-                        <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Verifier</button>
+                            {  isloadingVerifyOtp ?
+                                <div className="bg-[#0095f6] w-[78%] opacity-60 flex justify-center items-center">
+                                    <button disabled className="text-white spinner-border animate-spin inline-block w-6 h-6 rounded-full">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </button>
+                                </div> 
+                                :
+                                <button disabled={isresentOtpLogin ? true: false} className={` ${isresentOtpLogin ? "opacity-60": null} bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]`}>Verifier</button> 
+                            }
                     </div>
                     <div className="text-red-500 translate-y-4 flex mb-4 justify-center items-center">
                         {errors.email && <span>{errors.email.message}</span>}
                         {errors.otp && <span>{errors.otp.message}</span>}
                     </div>
                     <div className="flex justify-center text-xs translate-y-4">
-                        <button disabled={disabled} onClick={() => loginResend()} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
+                        {  isresentOtpLogin ?
+                            <button disabled className="text-[#0095f6] spinner-border animate-spin inline-block w-6 h-6 rounded-full">
+                                <span className="visually-hidden">Loading...</span>
+                            </button>
+                            :
+                            <button disabled={disabled} onClick={loginResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
+                        }
                     </div>
                 </form> : 
                 <form onSubmit={handleSubmit(onRegisterVerifyOtp)} className="bg-white border-[1px] h-[85%]" >
@@ -142,14 +178,28 @@ function FormOtp (props: any){
                     </div>
                     
                     <div className="flex justify-center mt-4 h-8">
-                        <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Verifier</button>
+                            {  isLoadingRegisterVerifyOtp?
+                                <div className="bg-[#0095f6] w-[78%] opacity-60 flex justify-center items-center">
+                                    <button disabled className="text-white spinner-border animate-spin inline-block w-6 h-6 rounded-full">
+                                    <span className="visually-hidden">Loading...</span>
+                                    </button>
+                                </div> 
+                                :
+                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Verifier</button> 
+                            }
                     </div>
                     <div className="text-red-500 translate-y-4 flex justify-center items-center">
                         {errors.email && <span>{errors.email.message}</span>}
                         {errors.otp && <span>{errors.otp.message}</span>}
                     </div>
                     <div className="flex justify-center text-xs translate-y-4">
-                        <button disabled={disabled} onClick={() => registerResend()} className= {` ${disabled ? "text-gray-100": "text-[#0095f6]"} cursor-pointer`}>Resend OTP</button>
+                        {  isresentOtpRegister ?
+                            <button disabled className="text-[#0095f6] spinner-border animate-spin inline-block w-6 h-6 rounded-full">
+                                <span className="visually-hidden">Loading...</span>
+                            </button>
+                            :
+                            <button disabled={disabled} onClick={registerResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
+                        }
                     </div>
                 </form>
             }
