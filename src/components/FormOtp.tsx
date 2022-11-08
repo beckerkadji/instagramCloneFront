@@ -7,6 +7,8 @@ import { verifyOtpSchema } from "../validations/verifyOtp.validation";
 import { storage } from "../utils";
 import { loginResendOtp, loginVerifyOtp, registerResendOtp, registerVerifyOpt } from "../authApi/api";
 import { useMutation } from "react-query";
+import {toast, ToastContainer} from "react-toastify"
+
 
 
 function FormOtp (props: any){
@@ -29,18 +31,19 @@ function FormOtp (props: any){
         formState: {errors}
     } = useForm<VerifyOptType.verifyOtp>({ resolver: joiResolver(verifyOtpSchema)})
 
-
-
-
     const {isLoading: isresentOtpRegister, mutateAsync: mutateAsyncRegisterResentOpt} = useMutation(async (data: any) =>{
-        const res =  await loginResendOtp({email})
+        const res =  await registerResendOtp({email})
         setDesabled(true)
         console.log(res)
-
         return res
     })
     const registerResend =  async (data: any) =>{
-        await mutateAsyncRegisterResentOpt(data)
+        const res = await mutateAsyncRegisterResentOpt(data)
+        if(res.data.code === 5000){
+            toast.success(res.data.message)
+        } else {
+            toast.error(res.data.message);
+        }
     }
 
     const {isLoading: isresentOtpLogin, mutateAsync: mutateAsyncLoginResentOpt} = useMutation(async (data: any) =>{
@@ -51,7 +54,12 @@ function FormOtp (props: any){
         return res
     })
     const loginResend =  async (data: any) =>{
-        await mutateAsyncLoginResentOpt(data)    
+        const res = await mutateAsyncLoginResentOpt(data) 
+        if(res.data.code === 5000){
+            toast.success(res.data.message)
+        } else {
+            toast.error(res.data.message);
+        }   
     }
 
     const {isLoading: isloadingVerifyOtp, mutateAsync: mutateAsyncLoginVerify} = useMutation(async (data: any)=>{
@@ -68,7 +76,12 @@ function FormOtp (props: any){
         return res
     })
     const onLoginVerifyOtp = async (data : any) =>{
-        await mutateAsyncLoginVerify(data)
+        const res = await mutateAsyncLoginVerify(data)
+        if(res.data.code === 5000){
+            toast.success(res.data.message)
+        } else {
+            toast.error(res.data.message);
+        }
     }
 
     const { isLoading: isLoadingRegisterVerifyOtp, mutateAsync: mutateAsyncRegisterVerifyOtp} = useMutation(async (data:any) => {
@@ -86,7 +99,12 @@ function FormOtp (props: any){
         return res
     })
     const onRegisterVerifyOtp = async (data: any) =>{
-        await mutateAsyncRegisterVerifyOtp(data)
+       const res=  await mutateAsyncRegisterVerifyOtp(data)
+       if(res.data.code === 5000){
+        toast.success(res.data.message)
+    } else {
+        toast.error(res.data.message);
+    }
     }
 
     return(
@@ -146,6 +164,7 @@ function FormOtp (props: any){
                             <button disabled={disabled} onClick={loginResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
                         }
                     </div>
+                    <ToastContainer />
                 </form> : 
                 <form onSubmit={handleSubmit(onRegisterVerifyOtp)} className="bg-white border-[1px] h-[85%]" >
                     <div className="h-[35%] flex justify-center items-center">
@@ -201,6 +220,7 @@ function FormOtp (props: any){
                             <button disabled={disabled} onClick={registerResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
                         }
                     </div>
+                    <ToastContainer />
                 </form>
             }
 

@@ -4,20 +4,21 @@ import LoginType from "../interfaces/Login.type";
 import RegisterType from "../interfaces/Register.type";
 import VerifyOptType from "../interfaces/VerifyOtp.type";
 import { storage } from "../utils";
+import {toast, ToastContainer} from "react-toastify"
 
 
 const loginFn = async (data : LoginType.loginFields)=> {
     const response = await login(data)
-    if(response.data.data.code === 5000){
-        storage.setData(response.data.data)
-    }
-    
+    if(response.data.code === 5000){
+        toast.success(response.data.message)
+    } 
     return response
 }
 
 const registerFn = async (data: RegisterType.registerFields) => {
     const response = await register(data)
-    if(response.data.data.code === 5000){
+    if(response.data.code === 5000){
+        toast.success(response.data.message)
         storage.setData(response.data.data)
     }
     

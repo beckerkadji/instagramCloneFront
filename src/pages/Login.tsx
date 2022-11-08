@@ -6,6 +6,8 @@ import { joiResolver} from "@hookform/resolvers/joi"
 import LoginType from "../interfaces/Login.type";
 import { Link, useNavigate } from "react-router-dom"
 import {BiHide, BiShow} from "react-icons/bi"
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login(){
     
@@ -43,10 +45,14 @@ function Login(){
 
     const onLogin = async (data: any)=>{
        const res: any = await login(data);
-       console.log('res', res.data)
-       if (res.data.code == 5000){
+       console.log("response login", res)
+       if (res.data.code === 5000){
+            toast.success(res.data.message);
             localStorage.setItem('email', data.email)
             navigate('/verify-otp', {state:{page:"login"}})
+       } else{
+            console.log("data", res.data)
+            toast.error(res.data.message);
        }
     }
 
@@ -85,7 +91,7 @@ function Login(){
                             { isLoggingIn ?
                                 <div className="bg-[#0095f6] w-[78%] opacity-60 flex justify-center items-center">
                                     <button disabled className="text-white spinner-border animate-spin inline-block w-6 h-6 rounded-full">
-                                    <span className="visually-hidden">Loading...</span>
+                                        <span className="visually-hidden">Loading...</span>
                                     </button>
                                 </div> 
                                 :
@@ -105,7 +111,7 @@ function Login(){
                     <p className="text-sm">Vous n'avez pas de compte? <Link to="/register"><a className="text-[#0095f6]">Inscrivez-vous</a></Link></p>
                 </div>
             </div>
-            
+            <ToastContainer />
         </section>
         
     )

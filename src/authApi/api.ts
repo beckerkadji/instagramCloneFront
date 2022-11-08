@@ -6,13 +6,11 @@ import { storage } from '../utils'
 
 export const login = async (data: LoginType.loginFields)=>{
     let res: any = await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/login`, data)
-    console.log('Login', res )
     return res
 }
 
 export const register = async (data: RegisterType.registerFields) => {
     let res: any = await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/register`, data)
-    console.log('Register', res )
     return res
 }
 
