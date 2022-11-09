@@ -7,7 +7,7 @@ import { verifyOtpSchema } from "../validations/verifyOtp.validation";
 import { storage } from "../utils";
 import { loginResendOtp, loginVerifyOtp, registerResendOtp, registerVerifyOpt } from "../authApi/api";
 import { useMutation } from "react-query";
-import {toast, ToastContainer} from "react-toastify"
+import {toast} from "react-toastify"
 
 
 
@@ -164,7 +164,6 @@ function FormOtp (props: any){
                             <button disabled={disabled} onClick={loginResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
                         }
                     </div>
-                    <ToastContainer />
                 </form> : 
                 <form onSubmit={handleSubmit(onRegisterVerifyOtp)} className="bg-white border-[1px] h-[85%]" >
                     <div className="h-[35%] flex justify-center items-center">
@@ -220,7 +219,6 @@ function FormOtp (props: any){
                             <button disabled={disabled} onClick={registerResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
                         }
                     </div>
-                    <ToastContainer />
                 </form>
             }
 

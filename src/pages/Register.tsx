@@ -46,7 +46,6 @@ function Register(){
         const res: any =  await register(data);
         
         if (res.data.code === 5000){
-            toast.success(res.data.message)
             localStorage.setItem('email', data.email)
             navigate('/verify-otp', {state:{page:"register"}})
         } else {
@@ -127,7 +126,6 @@ function Register(){
                     <p className="text-sm">Vous avez déjà un compte? <Link to="/"><a className="text-[#0095f6]">Connectez-vous</a></Link></p>
                 </div>
             </div>
-            <ToastContainer />
         </section>
         
     )

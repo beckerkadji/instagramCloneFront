@@ -6,7 +6,7 @@ import { joiResolver} from "@hookform/resolvers/joi"
 import LoginType from "../interfaces/Login.type";
 import { Link, useNavigate } from "react-router-dom"
 import {BiHide, BiShow} from "react-icons/bi"
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 function Login(){
@@ -47,7 +47,6 @@ function Login(){
        const res: any = await login(data);
        console.log("response login", res)
        if (res.data.code === 5000){
-            toast.success(res.data.message);
             localStorage.setItem('email', data.email)
             navigate('/verify-otp', {state:{page:"login"}})
        } else{
@@ -111,7 +110,6 @@ function Login(){
                     <p className="text-sm">Vous n'avez pas de compte? <Link to="/register"><a className="text-[#0095f6]">Inscrivez-vous</a></Link></p>
                 </div>
             </div>
-            <ToastContainer />
         </section>
         
     )

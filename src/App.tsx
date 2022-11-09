@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import VerifyOtp from './pages/VerifyOtp';
 import NotFound from './pages/NotFound';
+import { ToastContainer } from 'react-toastify';
 
 
 const queryClient = new QueryClient()
@@ -27,6 +28,7 @@ function App() {
               <Route path="*" element={<NotFound/>}/>
             </Routes>
           </BrowserRouter>
+          <ToastContainer />
         </AuthProvider>
         <ReactQueryDevtools initialIsOpen={false} position='bottom-right'/>
       </QueryClientProvider>
