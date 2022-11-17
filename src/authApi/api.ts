@@ -1,4 +1,5 @@
 import axios from 'axios'
+import ForgotPasswordType from '../interfaces/ForgotPassword.type'
 import LoginType from "../interfaces/Login.type"
 import RegisterType from '../interfaces/Register.type'
 import VerifyOptType from '../interfaces/VerifyOtp.type'
@@ -28,6 +29,10 @@ export const registerVerifyOpt = async (data: VerifyOptType.verifyOtp) =>{
 
 export const registerResendOtp = async (data: VerifyOptType.ResendOtp) =>{
     return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/register/resentotp`, data)
+}
+
+export const forgotPassword = async (data: ForgotPasswordType.ForgotPasswordField) => {
+    return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/forgotPassword`, data)
 }
 
 export const logoutUser = async (token: string) => {

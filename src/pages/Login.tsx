@@ -6,14 +6,15 @@ import { joiResolver} from "@hookform/resolvers/joi"
 import LoginType from "../interfaces/Login.type";
 import { Link, useNavigate } from "react-router-dom"
 import {BiHide, BiShow} from "react-icons/bi"
-import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useLocation } from "react-router-dom"
 
 function Login(){
     
     const [isPassword, setIsPassword] = useState(false)
     const [visible, setVisible] = useState(false)
     const inputPassword = useRef() as MutableRefObject<HTMLInputElement>
+    const location = useLocation()
 
     const CheckPassword = (e: any)=>{
         if(e.target.value === null || e.target.value === undefined || e.target.value === ''){
@@ -45,19 +46,15 @@ function Login(){
 
     const onLogin = async (data: any)=>{
        const res: any = await login(data);
-       console.log("response login", res)
        if (res.data.code === 5000){
             localStorage.setItem('email', data.email)
             navigate('/verify-otp', {state:{page:"login"}})
-       } else{
-            console.log("data", res.data)
-            toast.error(res.data.message);
-       }
+       } 
     }
 
     return(
-        <section className="w-full h-[115vh] bg-[#fafafa] flex justify-center text-[#262626]">
-            <div className="w-[350px] h-[69%] mt-4 flex flex-col justify-between w-full">
+        <section className="w-full h-[100vh] bg-[#fafafa] flex justify-center items-center text-[#262626]">
+            <div className="w-[350px] h-[450px]  mt-4 flex flex-col justify-between w-full">
                 <form onSubmit={handleSubmit(onLogin)} className="bg-white border-[1px] h-[85%]" >
                     <div className="h-[35%] flex justify-center items-center">
                         <p className="logo">APP</p>
@@ -67,6 +64,7 @@ function Login(){
                             <input 
                                 type='email'
                                 placeholder="name@example.com" id="floatingEmail"
+                                value={location.state?.email ? location.state.email : null}
                                 className="input rounded-sm form-control w-full bg-[#fafafa]"
                                 {...register("email")} 
                             /> <label htmlFor="floatingEmail" className="label text-xs text-gray-700 border-2">Email</label>
@@ -103,7 +101,7 @@ function Login(){
                     </div>
                     
                     <div className="w-full flex justify-center mt-12">
-                        <Link to="/" className="w-full flex justify-center"><a><p className="text-xs">Mot de passe oublié ?</p></a></Link>
+                        <Link to="/forgot-password" className="w-full flex justify-center"><a><p className="text-xs">Mot de passe oublié ?</p></a></Link>
                     </div>
                 </form>
                 <div className="bg-white border-[1px] h-[13%] flex justify-center items-center">
@@ -111,7 +109,6 @@ function Login(){
                 </div>
             </div>
         </section>
-        
     )
 }
 

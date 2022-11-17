@@ -8,6 +8,7 @@ import { storage } from "../utils";
 import { loginResendOtp, loginVerifyOtp, registerResendOtp, registerVerifyOpt } from "../authApi/api";
 import { useMutation } from "react-query";
 import {toast} from "react-toastify"
+import { CiLock } from "react-icons/ci"
 
 
 
@@ -34,7 +35,6 @@ function FormOtp (props: any){
     const {isLoading: isresentOtpRegister, mutateAsync: mutateAsyncRegisterResentOpt} = useMutation(async (data: any) =>{
         const res =  await registerResendOtp({email})
         setDesabled(true)
-        console.log(res)
         return res
     })
     const registerResend =  async (data: any) =>{
@@ -49,7 +49,6 @@ function FormOtp (props: any){
     const {isLoading: isresentOtpLogin, mutateAsync: mutateAsyncLoginResentOpt} = useMutation(async (data: any) =>{
         const res =  await loginResendOtp({email})
         setDesabled(true)
-        console.log(res)
 
         return res
     })
@@ -69,7 +68,6 @@ function FormOtp (props: any){
         console.log(res.data)
         if (res.data.code === 5000){
             const userdata = Object.entries(res.data.data)
-            console.log(userdata)
             storage.setData(userdata)
             navigate('/home')
         }
@@ -88,10 +86,8 @@ function FormOtp (props: any){
         const res: any = await registerVerifyOpt(data)
         setEmail(data.email)
         setDesabled(false)
-        console.log(res.data.code)
         if (res.data.code === 5000){
             const userdata = Object.entries(res.data.data)
-            console.log(userdata)
             storage.setData(userdata)
             navigate('/')
         }
@@ -108,12 +104,12 @@ function FormOtp (props: any){
     }
 
     return(
-        <section className="w-full h-[115vh] bg-[#fafafa] flex justify-center text-[#262626]">
-        <div className="w-[350px] h-[69%] mt-4 flex flex-col justify-between w-full">
+        <section className="w-full h-[100vh] bg-[#fafafa] flex justify-center items-center text-[#262626]">
+        <div className="w-[350px] h-[500px]  flex items-center w-full">
             { fromPage === 'login' ? 
-                <form onSubmit={handleSubmit(onLoginVerifyOtp)} className="bg-white border-[1px] h-[85%]" >
+                <form onSubmit={handleSubmit(onLoginVerifyOtp)} className="bg-white border-[1px] w-full h-[85%]" >
                     <div className="h-[35%] flex justify-center items-center">
-                        <p className="logo">APP</p>
+                        <p className="border-2 border-[#0095f6] w-20 h-20 rounded-full flex justify-center items-center text-3xl text-[#0095f6]"><CiLock/></p>
                     </div>
                     <div className="flex w-full text-sm mb-8 justify-center items-center">
                         <p className="text-center">Saisir le code envoyé à l'adresse:<br/> <span className="font-bold">{localEmail}</span></p>
@@ -148,7 +144,7 @@ function FormOtp (props: any){
                                     </button>
                                 </div> 
                                 :
-                                <button disabled={isresentOtpLogin ? true: false} className={` ${isresentOtpLogin ? "opacity-60": null} bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]`}>Verifier</button> 
+                                <button disabled={isresentOtpLogin ? true: false} className={` ${isresentOtpLogin ? "opacity-60": null} bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]`}>Confirmer</button> 
                             }
                     </div>
                     <div className="text-red-500 translate-y-4 flex mb-4 justify-center items-center">
@@ -161,13 +157,13 @@ function FormOtp (props: any){
                                 <span className="visually-hidden">Loading...</span>
                             </button>
                             :
-                            <button disabled={disabled} onClick={loginResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
+                            <button disabled={disabled} onClick={loginResend} className= "cursor-pointer text-[#0095f6]">Renvoyé le code</button>
                         }
                     </div>
                 </form> : 
-                <form onSubmit={handleSubmit(onRegisterVerifyOtp)} className="bg-white border-[1px] h-[85%]" >
+                <form onSubmit={handleSubmit(onRegisterVerifyOtp)} className="bg-white border-[1px] w-full h-[85%]" >
                     <div className="h-[35%] flex justify-center items-center">
-                        <p className="logo">APP</p>
+                    <p className="border-2 border-[#0095f6] w-20 h-20 rounded-full flex justify-center items-center text-3xl text-[#0095f6]"><CiLock/></p>
                     </div>
                     <div className="flex w-full text-sm mb-8 justify-center items-center">
                         <p className="text-center">Saisir le code envoyé à l'adresse:<br/> <span className="font-bold">{localEmail}</span></p>
@@ -203,7 +199,7 @@ function FormOtp (props: any){
                                     </button>
                                 </div> 
                                 :
-                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Verifier</button> 
+                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Confirmer</button> 
                             }
                     </div>
                     <div className="text-red-500 translate-y-4 flex justify-center items-center">
@@ -216,13 +212,11 @@ function FormOtp (props: any){
                                 <span className="visually-hidden">Loading...</span>
                             </button>
                             :
-                            <button disabled={disabled} onClick={registerResend} className= "cursor-pointer text-[#0095f6]">Resend OTP</button>
+                            <button disabled={disabled} onClick={registerResend} className= "cursor-pointer text-[#0095f6]">Renvoyé le code</button>
                         }
                     </div>
                 </form>
             }
-
-
 
         </div>
         

@@ -11,7 +11,9 @@ const loginFn = async (data : LoginType.loginFields)=> {
     const response = await login(data)
     if(response.data.code === 5000){
         toast.success(response.data.message)
-    } 
+    }else{
+        toast.error(response.data.message)
+    }
     return response
 }
 
@@ -19,7 +21,8 @@ const registerFn = async (data: RegisterType.registerFields) => {
     const response = await register(data)
     if(response.data.code === 5000){
         toast.success(response.data.message)
-        storage.setData(response.data.data)
+    }else{
+        toast.error(response.data.message)
     }
     
     return response
@@ -57,6 +60,11 @@ const loginResendOtpFn = async (data: VerifyOptType.ResendOtp)=>{
 
 const logoutFn = async (data: string)=>{
     const response = await logoutUser(data)
+    if(response.data.code === 5000){
+        toast.success(response.data.message)
+    }else{
+        toast.error(response.data.message)
+    }
     return response
 }
 

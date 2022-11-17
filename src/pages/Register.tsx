@@ -6,7 +6,6 @@ import { useAuth } from "../lib/auth";
 import {BiHide, BiShow} from "react-icons/bi"
 import { registerSchema } from "../validations/register.validation";
 import RegisterType from "../interfaces/Register.type";
-import {toast , ToastContainer} from "react-toastify"
 
 function Register(){
 
@@ -43,19 +42,18 @@ function Register(){
     const {register, isRegistering} = useAuth();
 
     const onRegister = async (data: any) =>{
-        const res: any =  await register(data);
-        
+        const res: any = await register(data);
         if (res.data.code === 5000){
             localStorage.setItem('email', data.email)
             navigate('/verify-otp', {state:{page:"register"}})
         } else {
-            toast.error(res.data.message)
+            console.log(res)
         }
     }
 
     return(
-        <section className="w-full h-[125vh] bg-[#fafafa] flex justify-center text-[#262626]">
-            <div className="w-[350px] h-[69%] mt-4 flex flex-col justify-between w-full">
+        <section className="w-full h-[100vh] bg-[#fafafa] flex justify-center items-center text-[#262626]">
+            <div className="w-[350px] h-[500px]  mt-4 flex flex-col justify-between w-full">
                 <form onSubmit={handleSubmit(onRegister)} className="bg-white border-[1px] h-[85%]" >
                     <div className="h-[25%] flex justify-center items-center">
                         <p className="logo">APP</p>
@@ -111,7 +109,7 @@ function Register(){
                                     </button>
                                 </div> 
                                 :
-                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">Se connecter</button> 
+                                <button className="bg-[#0095f6] rounded-sm font-bold text-sm text-white px-2 w-[78%]">S'inscrire</button> 
                             }
                     </div>
                     <div className="text-red-500 translate-y-4 flex justify-center items-center">

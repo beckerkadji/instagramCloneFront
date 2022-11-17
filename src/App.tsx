@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import VerifyOtp from './pages/VerifyOtp';
 import NotFound from './pages/NotFound';
 import { ToastContainer } from 'react-toastify';
+import ForgotPassword from './pages/ForgotPassword';
 
 
 const queryClient = new QueryClient()
@@ -25,6 +26,7 @@ function App() {
               <Route path='/register' element={<Register />} />
               <Route path='/verify-otp' element={<VerifyOtp />} />
               <Route path='/login' element={<Login />} />
+              <Route path='/forgot-password' element={<ForgotPassword />} />
               <Route path="*" element={<NotFound/>}/>
             </Routes>
           </BrowserRouter>
