@@ -32,7 +32,7 @@ export const registerResendOtp = async (data: VerifyOptType.ResendOtp) =>{
 }
 
 export const forgotPassword = async (data: ForgotPasswordType.ForgotPasswordField) => {
-    return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/forgotPassword`, data)
+    return await axios.post(`${<string>process.env.REACT_APP_AUTH_SERVICE_URL}/password/forgotpassword`, data)
 }
 
 export const logoutUser = async (token: string) => {

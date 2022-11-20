@@ -35,9 +35,7 @@ function ForgotPassword(){
         const res = await mutateAsync(data)
         if(res.data.code === 5000){
             toast.success(res.data.message)
-        } else {
-            toast.error(res.data.message);
-        }
+        } 
     }
 
     return(
